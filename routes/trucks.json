@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Suzuki Bolan",
+        "capacity": "150",
+        "container": ""
+    },
+    {
+        "name": "Suzuki Ravi",
+        "capacity": "600",
+        "container": ""
+    },
+    {
+        "name": "Hyundai Shehzore",
+        "capacity": "1500",
+        "container": ""
+    },
+    {
+        "name": "Daehan Shehzore",
+        "capacity": "1500",
+        "container": ""
+    },
+    {
+        "name": "Mazda",
+        "capacity": "",
+        "container": ""
+    },
+    {
+        "name": "Hino",
+        "capacity": "",
+        "container": ""
+    },
+    {
+        "name": "Isuzu",
+        "capacity": "",
+        "container": ""
+    }
+]

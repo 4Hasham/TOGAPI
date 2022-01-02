@@ -1,0 +1,29 @@
+{
+    "Small to Medium sized Package": {
+        "keywords": ["cloths", "crockery", "sheets", "juicer", "grinder", "clock", "lamp"]
+    },
+    "Furniture": {
+        "keywords": ["bed", "table", "chair", "dining"]
+    },
+    "Building Materials": {
+        "keywords": ["pipes", "cement", "bricks", "tiles"]
+    },
+    "Appliances": {
+        "keywords": ["TV", "television", "refrigerator", "fridge", "washing machine", "oven"]
+    },
+    "Vehicles": {
+        "keywords": ["car", "motorcycle", "bike"]
+    },
+    "Other non-home appliance machines": {
+        "keywords": ["drlling machine", "gyser"]
+    },
+    "Raw materials": {
+        "keywords": ["wood", "stone"]
+    },
+    "Animals": {
+        "keywords": ["cow", "dairy", "chicken", "goat", "lamb"]
+    },
+    "Food": {
+        "keywords": ["vegetables", "fruits", "mangoes"]
+    }
+}
