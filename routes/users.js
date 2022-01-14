@@ -6,7 +6,7 @@ var bcrypt = require('bcrypt');
 var connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'hashamali641',
+  password: 'hashamali641!',
   database: 'truckongo'
 });
 
@@ -69,18 +69,18 @@ router.post('/signupA', function(req, res, next) {
   (err, results, fields) => {
     if(err)
       throw err;
-    connection.query("SELECT ID, userID, password FROM `customers` WHERE `email`=?", [email], (err, results, fields) => {
+    connection.query("SELECT ID, userID, password FROM `customers` WHERE `email`=?", [req.body.email], (err, results, fields) => {
       if(err)
         throw err;
         if(results.length > 0) {
-          res.send(-1);
+          res.send((-1).toString());
         }
     });
     connection.query("SELECT ID, userID, password FROM `customers` WHERE `phone`=?", [req.body.phone], (err, results, fields) => {
       if(err)
         throw err;
         if(results.length > 0) {
-          res.send(1);
+          res.send((1).toString());
         }
     });
     bcrypt.genSalt(10, (err, salt) => {
@@ -95,7 +95,7 @@ router.post('/signupA', function(req, res, next) {
       });
     });
   });
-  res.send(0);
+  res.send((0).toString());
 });
 
 router.post('/loginA', function(req, res, next) {
@@ -121,6 +121,7 @@ router.post('/loginA', function(req, res, next) {
           last_name: '',
           dob: ''
         });
+        return;
       }
       bcrypt.compare(pass, results[0].password, function(err, result) {
         if(err)
@@ -144,6 +145,7 @@ router.post('/loginA', function(req, res, next) {
             }
             console.log(obj);
             res.send(obj);
+            return;
           });
         }
         else {
@@ -161,6 +163,7 @@ router.post('/loginA', function(req, res, next) {
             dob: ''
           });
           console.log("F1");
+          return;
         }
       });
     });

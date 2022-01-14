@@ -12,7 +12,7 @@ router.post('/signUp', (req, res, next) => {
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'hashamali641',
+    password: 'hashamali641!',
     database: 'truckongo'
 });
   
@@ -33,6 +33,20 @@ router.get('/Data', (req, res, next) => {
     var parsed = JSON.parse(d);
     res.send(parsed);
 });
+
+router.get('/DataA', (req, res, next) => {
+    var pth = path.join(__dirname + "/" + req.query['file'] + ".json");
+    try {
+        var d = fs.readFileSync(pth,  {encoding:'utf8', flag:'r'});
+        console.log(pth, d);    
+    }
+    catch(e) {
+        console.log(e);
+    }
+    var parsed = JSON.parse(d);
+    res.send({data: parsed});
+});
+
 
 router.get('/dbData', (req, res, next) => {
     switch(req.query['name']) {
