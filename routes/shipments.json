@@ -1,29 +1,38 @@
 {
     "Small to Medium sized Package": {
+        "catID": 0,
         "keywords": ["cloths", "crockery", "sheets", "juicer", "grinder", "clock", "lamp"]
     },
     "Furniture": {
-        "keywords": ["bed", "table", "chair", "dining"]
+        "catID": 1,
+        "keywords": ["bed", "table", "chair set", "dining table"]
     },
     "Building Materials": {
-        "keywords": ["pipes", "cement", "bricks", "tiles"]
+        "catID": 2,
+        "keywords": ["pipes", "cement", "bricks", "tiles", "gravel"]
     },
     "Appliances": {
+        "catID": 3,
         "keywords": ["TV", "television", "refrigerator", "fridge", "washing machine", "oven"]
     },
     "Vehicles": {
+        "catID": 4,
         "keywords": ["car", "motorcycle", "bike"]
     },
     "Other non-home appliance machines": {
+        "catID": 5,
         "keywords": ["drlling machine", "gyser"]
     },
     "Raw materials": {
+        "catID": 6,
         "keywords": ["wood", "stone"]
     },
     "Animals": {
-        "keywords": ["cow", "dairy", "chicken", "goat", "lamb"]
+        "catID": 7,
+        "keywords": ["cow", "camel", "dairy", "chicken", "goat", "lamb", "horse", "donkey"]
     },
     "Food": {
-        "keywords": ["vegetables", "fruits", "mangoes"]
+        "catID": 8,
+        "keywords": ["vegetables", "fruits", "meat"]
     }
 }
