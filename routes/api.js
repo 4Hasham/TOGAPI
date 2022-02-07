@@ -76,4 +76,26 @@ router.get('/getAddress', (req, res, next) => {
     });
 });
 
+router.post('/getCategories', (req, res, next) => {
+    var obj = {
+        lID: 0,
+        load: "",
+        iID: 0,
+        category: ""
+    };
+    connection.query("SELECT * FROM loads WHERE ID = ?", [req.body.lID],
+    (err, results, fields) => {
+        if(err)
+            throw err;
+        if(results.length > 0) {
+            obj.lID = results[0].ID;
+            obj.load = results[0].loadItems;
+            obj.iID = results[0].icID;
+            obj.category = results[0].categories;
+        }
+        res.send(obj);
+    });
+});
+
+
 module.exports = router;

@@ -34,11 +34,11 @@ router.post('/signup', function(req, res, next) {
         (err, results, fields) => {
           if(err)
             throw err;
+            res.send(true);
         });
       });
     });
   });
-  res.send(true);
 });
 
 router.post('/login', function(req, res, next) {
@@ -51,7 +51,7 @@ router.post('/login', function(req, res, next) {
         bcrypt.compare(pass, results[0].password, function(err, result) {
           if(err)
             throw err;
-          if(result)
+          if(results)
             res.send({
               custID: results[0].ID,
               userID: results[0].userID
