@@ -10,6 +10,8 @@ var driversRouter = require('./routes/drivers');
 var trucksRouter = require('./routes/trucks');
 var registerRouter = require('./routes/register');
 var apiRouter = require('./routes/api');
+var bookRouter = require('./routes/book');
+var firebaseRouter = require('./routes/firebase');
 var app = express();
 
 // view engine setup
@@ -28,6 +30,9 @@ app.use('/drivers', driversRouter);
 app.use('/register', registerRouter);
 app.use('/trucks', trucksRouter);
 app.use('/api', apiRouter);
+app.use('/book', bookRouter);
+app.use('/firebase', firebaseRouter);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

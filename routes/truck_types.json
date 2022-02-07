@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Mini",
+        "capacity": "150",
+        "container": ""
+    },
+    {
+        "name": "Medium",
+        "capacity": "600",
+        "container": ""
+    },
+    {
+        "name": "Large",
+        "capacity": "600",
+        "container": ""
+    }
+]

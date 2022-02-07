@@ -12,7 +12,7 @@
         "keywords": ["pipes", "cement", "bricks", "tiles", "gravel"]
     },
     "Appliances": {
-        "catID": 3,
+        "catID": 3,                                                                  
         "keywords": ["TV", "television", "refrigerator", "fridge", "washing machine", "oven"]
     },
     "Vehicles": {
