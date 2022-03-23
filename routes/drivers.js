@@ -73,17 +73,26 @@ router.post('/login', function(req, res, next) {
     connection.query("SELECT ID, userID, password FROM `drivers` WHERE `phone`=?", [phone], (err, results, fields) => {
       if(err)
         throw err;
-        bcrypt.compare(pass, results[0].password, function(err, result) {
-          if(err)
-            throw err;
-          if(result)
-            res.send({
-              drivID: results[0].ID,
-              userID: results[0].userID
-            });
-          else
-            res.send({ID: 0});
-        });
+        if(results.length > 0) {
+          bcrypt.compare(pass, results[0].password, function(err, result) {
+            if(err)
+              throw err;
+            if(result)
+              res.send({
+                drivID: results[0].ID,
+                userID: results[0].userID
+              });
+            else {
+              res.send({drivID: 0, userID: 0});
+            }
+          });
+        }
+        else {
+          res.send({
+            drivID: 0,
+            userID: 0
+          })
+        }
     });
   }
 });
@@ -215,7 +224,7 @@ router.post("/getTrucks", function(req, res, next) {
     length: 0
   };
   if(req.body !== null) {
-    connection.query("SELECT * FROM trucks WHERE driverID = ? AND ID = ?", [req.body.driverID, req.body.tID],
+    connection.query("SELECT * FROM trucks WHERE ID = ?", [req.body.tID],
     (err, results, fields) => {
       if(err)
         throw err;
@@ -232,7 +241,7 @@ router.post("/getTrucks", function(req, res, next) {
         res.send(ob);
       }
       else {
-        res.send([obj]);
+        res.send(obj);
       }
     });
   }
@@ -349,6 +358,47 @@ router.post("/setCurrentTruck", (req, res, next) => {
   else {
     res.status(200).send(false);
   }
+});
+
+router.get('/getDriver', (req, res, next) => {
+  var obj = {
+    drivID: 0,
+    userID: 0,
+    phone: '',
+    pass: '',
+    wallet: 0,
+    uID: 0,
+    gender: '',
+    first_name: '',
+    last_name: '',
+    dob: ''
+  };
+  connection.query("SELECT * FROM `drivers` WHERE `ID`=?", [req.query.driverID], (err, results, fields) => {
+    if(err)
+      throw err;
+    if(results.length > 0) {
+      console.log("F");
+      connection.query("SELECT * FROM `users` WHERE `ID`=?", [results[0].userID], (err1, results1, fields1) => {
+        if(err1)
+          throw err1;
+        if(results1.length > 0) {
+          obj.drivID = req.query.driverID;
+          obj.dob = results1[0].dob;
+          obj.gender = results1[0].gender;
+          obj.uID = results1[0].userID;
+          obj.userID = results1[0].userID;
+          obj.first_name = results1[0].first_name;
+          obj.last_name = results1[0].last_name;
+          obj.phone = results[0].phone;
+          res.send(obj);
+        }
+        else
+          res.send(obj);
+      });
+    }
+    else
+      res.send(obj);
+  });
 });
 
 module.exports = router;

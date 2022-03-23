@@ -88,7 +88,8 @@ router.post('/address', function(req, res, next) {
 });
 
 router.post('/load', function(req, res, next) {
-  connection.query("INSERT INTO loads(loadItems, icID, categories) VALUES(?, ?, ?)", [req.body.load, req.body.iID, req.body.category],
+  connection.query("INSERT INTO loads(loadItems, icID, categories) VALUES(?, ?, ?)",
+  [req.body.load, req.body.iID, req.body.category],
   (err, results, fields) => {
     if(err)
       throw err;

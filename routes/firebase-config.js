@@ -1,5 +1,4 @@
 var admin = require("../functions/node_modules/firebase-admin");
-
 var serviceAccount = require("./serviceAccountKey.json");
 
 admin.initializeApp({

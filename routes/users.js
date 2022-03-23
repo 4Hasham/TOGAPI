@@ -48,17 +48,22 @@ router.post('/login', function(req, res, next) {
     connection.query("SELECT ID, userID, password FROM `customers` WHERE `email`=?", [email], (err, results, fields) => {
       if(err)
         throw err;
+      if(results.length > 0) {
         bcrypt.compare(pass, results[0].password, function(err, result) {
           if(err)
             throw err;
-          if(results)
+          if(result)
             res.send({
               custID: results[0].ID,
               userID: results[0].userID
             });
           else
-            res.send({ID: 0});
+            res.send({custID: 0, userID: 0});
         });
+      }
+      else {
+        res.send({custID: 0, userID: 0});
+      }
     });
   }
 });
@@ -185,6 +190,48 @@ router.get('/getinfo', function(req, res, next) {
         res.send(results[0]);
     });
   }
+});
+
+router.get('/getCustomer', (req, res, next) => {
+  var obj = {
+    custID: 0,
+    userID: 0,
+    email: '',
+    phone: '',
+    pass: '',
+    wallet: 0,
+    uID: 0,
+    gender: '',
+    first_name: '',
+    last_name: '',
+    dob: ''
+  };
+  connection.query("SELECT * FROM `customers` WHERE `ID`=?", [req.query.custID], (err, results, fields) => {
+    if(err)
+      throw err;
+    if(results.length > 0) {
+      console.log("F");
+      connection.query("SELECT * FROM `users` WHERE `ID`=?", [results[0].userID], (err1, results1, fields1) => {
+        if(err1)
+          throw err1;
+        if(results1.length > 0) {
+          obj.custID = req.query.custID;
+          obj.dob = results1[0].dob;
+          obj.gender = results1[0].gender;
+          obj.uID = results1[0].userID;
+          obj.first_name = results1[0].first_name;
+          obj.last_name = results1[0].last_name;
+          obj.email = results[0].email;
+          obj.phone = results[0].phone;
+          res.send(obj);
+        }
+        else
+          res.send(obj);
+      });
+    }
+    else
+      res.send(obj);
+  });
 });
 
 module.exports = router;

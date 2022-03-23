@@ -18,10 +18,12 @@
     "firebase-admin": "^10.0.2",
     "http-errors": "~1.6.3",
     "jade": "^0.31.2",
+    "java-caller": "^2.4.0",
     "java.io": "^2.4.0",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "rtree": "^1.4.2"
   },
   "description": "API",
   "main": "app.js",
