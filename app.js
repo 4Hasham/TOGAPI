@@ -12,6 +12,7 @@ var registerRouter = require('./routes/register');
 var apiRouter = require('./routes/api');
 var bookRouter = require('./routes/book');
 var firebaseRouter = require('./routes/firebase');
+var treeRouter = require('./routes/tree');
 var app = express();
 
 // view engine setup
@@ -32,6 +33,7 @@ app.use('/trucks', trucksRouter);
 app.use('/api', apiRouter);
 app.use('/book', bookRouter);
 app.use('/firebase', firebaseRouter);
+app.use('/tree', treeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

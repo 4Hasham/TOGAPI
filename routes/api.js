@@ -76,6 +76,75 @@ router.get('/getAddress', (req, res, next) => {
     });
 });
 
+router.get('/getAddressA', (req, res, next) => {
+    var obj = {
+        aID: 0,
+        line1: "",
+        line2: "",
+        city: ""
+    };
+    connection.query("SELECT line1, line2, city FROM address WHERE ID = ?", [req.query.aid], (err, results, fields) => {
+        if(err) {
+            throw err;
+        }
+        if(results.length > 0) {
+            obj.aID = results[0].ID;
+            obj.line1 = results[0].line1;
+            obj.line2 = results[0].line2;
+            obj.city = results[0].city;
+            res.send(obj);
+        }
+        else {
+            res.send(obj);
+        }
+    });
+});
+
+router.get('/getLoadsA', (req, res, next) => {
+    var obj = {
+        lID: 0,
+        load: "",
+        iID: "",
+        category: ""
+    };
+    connection.query("SELECT * FROM loads WHERE ID = ?", [req.query.lid], (err, results, fields) => {
+        if(err) {
+            throw err;
+        }
+        if(results.length > 0) {
+            obj.lID = results[0].ID;
+            obj.load = results[0].loadItems;
+            obj.iID = results[0].icID;
+            obj.category = results[0].categories;
+            res.send(obj);
+        }
+        else {
+            res.send(obj);
+        }
+    });
+});
+
+router.get('/getLoads', (req, res, next) => {
+    var obj = {
+        lID: 0,
+        load: "",
+        iID: 0,
+        category: ""
+    };
+    connection.query("SELECT * FROM loads WHERE ID = ?", [req.query.lid],
+    (err, results, fields) => {
+        if(err)
+            throw err;
+        if(results.length > 0) {
+            obj.lID = results[0].ID;
+            obj.load = results[0].loadItems;
+            obj.iID = results[0].icID;
+            obj.category = results[0].categories;
+        }
+        res.send(obj);
+    });
+});
+
 router.post('/getCategories', (req, res, next) => {
     var obj = {
         lID: 0,
@@ -97,5 +166,34 @@ router.post('/getCategories', (req, res, next) => {
     });
 });
 
+router.post('/checkTruckAssigned', (req, res, next) => {
+    var obj = {
+        bID: 0,
+        custID: 0,
+        truckID: 0,
+        pickup: 0,
+        destination: 0,
+        date: "",
+        time: "",
+        rating: 0,
+        paymentID: 0,
+        loadID: 0,
+        intercity: 0
+    };
+    connection.query("SELECT * FROM bookingdetails WHERE ID = ?", [req.body.bID],
+    (err, results, fields) => {
+        if(err)
+            throw err;
+        if(results.length > 0) {
+            console.log(results[0]);
+            if(results[0].truckID != null && results[0].truckID > 0) {
+                res.send(false);
+            }
+            else {
+                res.send(true);
+            }
+        }
+    });
+});
 
 module.exports = router;

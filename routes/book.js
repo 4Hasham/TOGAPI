@@ -17,7 +17,7 @@ if(err)
 });
 
 router.post('/intercity', (req, res, next) => {
-    connection.query("INSERT INTO bookingDetails(custID, truckID, pickup, destination, date, time, rating, paymentID, loadID, intercity) VALUES(?, 0, ?, ?, ?, ?, 0, 0, ?, 1)", [id], (err, results, fields) => {
+    connection.query("INSERT INTO bookingdetails(custID, truckID, pickup, destination, date, time, rating, paymentID, loadID, intercity) VALUES(?, 0, ?, ?, ?, ?, 0, 0, ?, 1)", [id], (err, results, fields) => {
         if(err) {
             throw err;
         }
@@ -57,6 +57,38 @@ router.post('/intracity', (req, res, next) => {
         });
     });
 });
+
+router.post('/assignTruckToCustomer', (req, res, next) => {
+    var obj = {
+        bID: 0,
+        custID: 0,
+        truckID: 0,
+        pickup: 0,
+        destination: 0,
+        date: "",
+        time: "",
+        rating: 0,
+        paymentID: 0,
+        loadID: 0,
+        intercity: 0
+    };
+    connection.query("SELECT * FROM bookingdetails WHERE ID = ?", [req.body.bID],
+    (err, results, fields) => {
+        if(err)
+            throw err;
+        if(results.length > 0) {
+            connection.query("UPDATE bookingdetails SET truckID = ? WHERE ID = ?", [req.body.truckID, req.body.bID],
+            (err1, results1, fields1) => {
+                if(err1)
+                    throw err1;
+                res.send(true);
+            });
+        }
+        else
+            res.send(false);
+    });
+});
+
 
 router.get('/getIntercity', (req, res, next) => {
     var pickupID = -1, destID = -1;
