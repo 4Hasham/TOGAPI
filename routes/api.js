@@ -51,7 +51,7 @@ router.get('/DataA', (req, res, next) => {
 router.get('/dbData', (req, res, next) => {
     switch(req.query['name']) {
         case 'routes':
-            connection.query("SELECT * FROM bookingdetails WHERE intercity = 1",
+            connection.query("SELECT * FROM routes",
             (err, results, fields) => {
                 if(err)
                     throw err;
@@ -71,8 +71,14 @@ router.get('/getAddress', (req, res, next) => {
         if(err) {
             throw err;
         }
-        var addr = [results[0].line1, results[0].line2, results[0].city];
-        res.send({res: addr});
+        if(results.length > 0) {
+            var addr = [results[0].line1, results[0].line2, results[0].city];
+            console.log(addr);
+            res.send({res: addr});
+        }
+        else {
+            res.send({res: null});
+        }
     });
 });
 
@@ -92,6 +98,30 @@ router.get('/getAddressA', (req, res, next) => {
             obj.line1 = results[0].line1;
             obj.line2 = results[0].line2;
             obj.city = results[0].city;
+            res.send(obj);
+        }
+        else {
+            res.send(obj);
+        }
+    });
+});
+
+router.get('/getPaymentA', (req, res, next) => {
+    var obj = {
+        pID: 0,
+        paid: 0,
+        extra: 0,
+        fare: 0
+    };
+    connection.query("SELECT * FROM payment WHERE ID = ?", [req.query.pid], (err, results, fields) => {
+        if(err) {
+            throw err;
+        }
+        if(results.length > 0) {
+            obj.pID = results[0].ID;
+            obj.paid = results[0].paid;
+            obj.extra = results[0].extra;
+            obj.fare = results[0].fare;
             res.send(obj);
         }
         else {

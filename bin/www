@@ -3,6 +3,9 @@
 /**
  * Module dependencies.
  */
+ module.exports = {
+  getIO
+};
 
 var app = require('../app');
 var debug = require('debug')('api:server');
@@ -20,7 +23,12 @@ console.log("Port: " + port);
  */
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
 
+io.on('connection', (client) => {
+  io.on('join', (data) => {
+  });
+})
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -89,3 +97,5 @@ function onListening() {
   debug('Listening on ' + bind);
   console.log('Listening to ' + bind);
 }
+
+function getIO() { return io }

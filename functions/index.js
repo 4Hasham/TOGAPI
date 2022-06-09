@@ -1,5 +1,4 @@
 const functions = require("firebase-functions");
-const db = require('firebase-admin/database');
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions

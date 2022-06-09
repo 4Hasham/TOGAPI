@@ -401,4 +401,144 @@ router.get('/getDriver', (req, res, next) => {
   });
 });
 
+router.get('/getWallet', (req, res, next) => {
+  connection.query("SELECT * FROM wallet WHERE ID = ?", [req.query.walletID],
+  (err, results, fields) => {
+    if(err)
+      throw err;
+    if(results.length > 0) {
+      res.send({
+        userID: req.query.walletID,
+        amount: results[0].amount
+      });
+    }
+    else {
+      res.send({
+        userID: 0,
+        amount: 0
+      })
+    }
+  });
+});
+
+router.post('/setWallet', (req, res, next) => {
+  connection.query("SELECT * FROM wallet WHERE ID = ?", [req.body.userID],
+    (err, results, fields) => {
+      if(err)
+        throw err;
+      if(results.length > 0) {
+        let updated = results[0].amount + req.body.amount;
+        connection.query("UPDATE wallet SET amount = ? WHERE ID = ?", [updated, req.body.userID],
+        (err1, results1, fields1) => {
+          if(err1)
+            throw err1;
+          connection.query("SELECT * FROM drivers WHERE wallet = ?", [req.body.userID],
+          (err2, results2, fields2) => {
+            if(err2)
+              throw err2;
+            if(results2.length > 0) {
+              res.send(true);
+            }
+            else {
+              connection.query("UPDATE drivers SET wallet = ? WHERE userID = ?", [req.body.userID, req.body.userID],
+              (err3, results3, fields3) => {
+                if(err3) {
+                  throw err3;
+                }
+                res.send(true);
+              });
+            }
+          });
+        });
+      }
+      else {
+        connection.query("INSERT INTO wallet VALUES(?, ?)", [req.body.userID, req.body.amount],
+        (err1, results1, fields1) => {
+          if(err1)
+            throw err1;
+          connection.query("UPDATE drivers SET wallet = ? WHERE userID = ?", [req.body.userID, req.body.userID],
+          (err3, results3, fields3) => {
+            if(err3) {
+              throw err3;
+            }
+            res.send(true);
+          });          
+        });
+      }
+    }
+  );
+});
+
+router.get('/getPrevDriverRidesApp', (req, res, next) => {
+  ret = [];
+  console.log(req.query);
+  connection.query("SELECT * FROM bookingdetails WHERE truckID = ? ORDER BY ID DESC LIMIT 10", [req.query.truckID],
+  (err, results, fields) => {
+      if(err)
+          throw err;
+          console.log(results);
+      if(results.length > 0) {
+          for(let i = 0; i < results.length; ++i) {
+              let c = {
+                  bID: results[i].ID,
+                  custID: results[i].custID,
+                  truckID: results[i].truckID,
+                  pickup: results[i].pickup,
+                  destination: results[i].destination,
+                  date: results[i].date,
+                  time: results[i].time,
+                  rating: results[i].rating,
+                  paymentID: results[i].paymentID,
+                  loadID: results[i].loadID,
+                  intercity: results[i].intercity
+              };
+              ret.push(c);
+          }
+          res.send(ret);
+      }
+      else {
+          res.send(ret);            
+      }
+  });
+});
+
+router.get('/getAggregateRatingIntercity', (req, res, next) => {
+  connection.query("SELECT * FROM driverrating WHERE driverID = ?", [req.query.did],
+  (err, results, fields) => {
+    if(err)
+      throw err;
+    if(results.length > 0) {
+      let rating = 0.0;
+      for(let i = 0; i < results.length; ++i) {
+        rating = rating + results[i].rating;
+      }
+      rating = (rating / results.length).toFixed();
+      res.send(rating.toString());
+    }
+    else {
+      res.send((0).toString());
+    }
+  });
+});
+
+router.get('/getAggregateRatingIntracity', (req, res, next) => {
+  connection.query("SELECT * FROM bookingdetails WHERE rating > 0 AND rating <= 5 AND truckID IN (SELECT ID FROM trucks WHERE driverID = ?)",
+  [req.query.did],
+  (err, results, fields) => {
+    if(err)
+      throw err;
+    if(results.length > 0) {
+      let rating = 0.0;
+      for(let i = 0; i < results.length; ++i) {
+        rating = rating + results[i].rating;
+      }
+      rating = (rating / results.length).toFixed();
+      res.send(rating.toString());
+    }
+    else {
+      res.send((0).toString());
+    }
+  });
+});
+
 module.exports = router;
