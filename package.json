@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "server": "nodemon ./bin/www",
+    "server": "concurrently \"nodemon ./bin/www\" \"node cron\"",
     "client": "cd ../client/ && npm run start",
     "postinstall": "cd functions && npm install",
     "dev": "concurrently \"npm run server\" \"npm run client\""
@@ -22,8 +22,11 @@
     "java.io": "^2.4.0",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
+    "node-cron": "^3.0.0",
+    "nodemailer": "^6.7.3",
     "nodemon": "^2.0.12",
-    "rtree": "^1.4.2"
+    "rtree": "^1.4.2",
+    "socket.io": "^4.4.1"
   },
   "description": "API",
   "main": "app.js",

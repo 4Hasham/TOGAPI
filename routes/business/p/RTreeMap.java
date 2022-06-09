@@ -54,7 +54,7 @@ public class RTreeMap {
         JsonObject ob = (JsonObject) new JsonParser().parse(args[0]);
         LatLng cust = new LatLng(BigDecimal.valueOf(Double.parseDouble(ob.get("lat").getAsString())), BigDecimal.valueOf(Double.parseDouble(ob.get("lng").getAsString())));
         RTreeMap rtreemap = new RTreeMap(locs, cust);
-        System.out.println(rtreemap.getDriverLocations().toString());
+        System.out.println(gson.toJson(rtreemap.getDriverLocations()));
     }
 
     public static <T> Iterable<Entry<T, Point>> search(RTree<T, Point> tree, Point lonLat, final double distanceKm) {
