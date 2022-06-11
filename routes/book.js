@@ -4,18 +4,7 @@ var path = require('path');
 var mysql = require('mysql');
 var fs = require('fs');
 
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'hashamali641!',
-    database: 'truckongo'
-});
-  
-connection.connect((err) => {
-if(err)
-    return console.error(err.message);
-});
-
+var connection = require('./config');
 router.get('/getBooking', (req, res, next) => {
     connection.query("SELECT * FROM bookingdetails WHERE ID = ?", [req.query.bID],
     (err, results, fields) => {

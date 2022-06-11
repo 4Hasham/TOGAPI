@@ -1,24 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path');
-var mysql = require('mysql');
 var fs = require('fs');
+var connection = require('./config');
 
 router.post('/signUp', (req, res, next) => {
     console.log(req.body);
     res.send(true);
-});
-
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'hashamali641!',
-    database: 'truckongo'
-});
-  
-connection.connect((err) => {
-if(err)
-    return console.error(err.message);
 });
 
 router.get('/Data', (req, res, next) => {

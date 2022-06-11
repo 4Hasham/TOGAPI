@@ -5,17 +5,7 @@ var admin1 = require('../routes/firebase-config');
 //var mailer = require('nodemailer');
 const sock = require('../bin/www');
 const { JavaCaller } = require('java-caller');
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'hashamali641!',
-  database: 'truckongo'
-});
-
-connection.connect((err) => {
-  if(err)
-    return console.error(err.message);
-});
+var connection = require('./config');
 
 router.post('/registerDriverToken', function(req, res, next) {
   var mysqlTimestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -84,26 +74,28 @@ router.post('/registerCustomerToken', function(req, res, next) {
         });
       }
       else {
-        connection.query("UPDATE customer_tokens SET token = ?, last_updated = ? WHERE customer_id = ?", [req.body.token, mysqlTimestamp, req.body.uID],
-        (err1, results1, fields1) => {
-          if(err1)
-            throw err1;
-            var payload = {
-              notification: {
-                title: "Login from New Device",
-                body: "A new sign in detected from another device."
-              },
-              data: {
-                mess_str: JSON.stringify(req.body),
-                mess_type: "10"
-              }
-            };    
-            admin1.messaging().sendToDevice(results[0].token, payload, options)
-            .then(function(response) {
-              console.log("Successfully sent message:", response);
-              res.send(true);
-            });
-        });
+        if(req.body.token !== results[0].token) {
+          connection.query("UPDATE customer_tokens SET token = ?, last_updated = ? WHERE customer_id = ?", [req.body.token, mysqlTimestamp, req.body.uID],
+          (err1, results1, fields1) => {
+            if(err1)
+              throw err1;
+              var payload = {
+                notification: {
+                  title: "Login from New Device",
+                  body: "A new sign in detected from another device."
+                },
+                data: {
+                  mess_str: JSON.stringify(req.body),
+                  mess_type: "-10"
+                }
+              };    
+              admin1.messaging().sendToDevice(results[0].token, payload, options)
+              .then(function(response) {
+                console.log("Successfully sent message:", response);
+                res.send(true);
+              });
+          });
+        }
       }
     });
 });
