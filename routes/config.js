@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var fs = require('fs');
+
 var con = mysql.createConnection({
     host: 'truckongo.mysql.database.azure.com',
     user: 'hasham',

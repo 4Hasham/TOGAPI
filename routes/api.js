@@ -9,6 +9,11 @@ router.post('/signUp', (req, res, next) => {
     res.send(true);
 });
 
+router.get('/testCon', (req, res, next) => {
+    console.log(connection.config.localAddress);
+    return(true);
+});
+
 router.get('/Data', (req, res, next) => {
     var pth = path.join(__dirname + "/" + req.query['file'] + ".json");
     try {
