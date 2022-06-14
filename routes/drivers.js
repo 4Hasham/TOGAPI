@@ -531,4 +531,37 @@ router.get('/getAggregateRatingIntracity', (req, res, next) => {
   });
 });
 
+router.post('/setDriverInfo', (req, res, next) => {
+  console.log(req.files);
+  console.log(req.body);
+  try {
+    if(!req.files) {
+        res.send({
+            status: false,
+            message: 'No file uploaded'
+        });
+    } else {
+        let cnicFront = req.files.cnicFront;        
+        let cnicBack = req.files.cnicBacl;        
+        let licenseFront = req.files.licenseFront;        
+        let licenseBack = req.files.licenseBack;        
+        cnicFront.mv('./uploads/' + cnicFront.name);
+        cnicBack.mv('./uploads/' + cnicBack.name);
+        licenseFront.mv('./uploads/' + licenseFront.name);
+        licenseBack.mv('./uploads/' + licenseBack.name);
+        res.send({
+            status: true,
+            message: 'Files uploaded',
+            data: {
+                name: avatar.name,
+                mimetype: avatar.mimetype,
+                size: avatar.size
+            }
+        });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }  
+});
+
 module.exports = router;

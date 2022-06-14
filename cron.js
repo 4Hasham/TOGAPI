@@ -1,13 +1,5 @@
-var mysql = require('mysql');
-var fs = require('fs');
 const cron = require('node-cron');
-const { DefaultSerializer } = require('v8');
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'hashamali641!',
-    database: 'truckongo'
-});
+var connection = require('./routes/config');
 
 connection.connect((err) => {
 if(err)
