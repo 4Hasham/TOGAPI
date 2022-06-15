@@ -542,7 +542,7 @@ router.post('/setDriverInfo', (req, res, next) => {
         });
     } else {
         let cnicFront = req.files.cnicFront;        
-        let cnicBack = req.files.cnicBacl;        
+        let cnicBack = req.files.cnicBack;        
         let licenseFront = req.files.licenseFront;        
         let licenseBack = req.files.licenseBack;        
         cnicFront.mv(__dirname + '../public/uploads/' + req.body.cnicFrontName);
