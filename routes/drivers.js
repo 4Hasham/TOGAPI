@@ -545,19 +545,44 @@ router.post('/setDriverInfo', (req, res, next) => {
         let cnicBack = req.files.cnicBacl;        
         let licenseFront = req.files.licenseFront;        
         let licenseBack = req.files.licenseBack;        
-        cnicFront.mv('./uploads/' + cnicFront.name);
-        cnicBack.mv('./uploads/' + cnicBack.name);
-        licenseFront.mv('./uploads/' + licenseFront.name);
-        licenseBack.mv('./uploads/' + licenseBack.name);
-        res.send({
+        cnicFront.mv(__dirname + '../public/uploads/' + req.body.cnicFrontName);
+        cnicBack.mv(__dirname + '../public/uploads/' + req.body.cnicBackName);
+        licenseFront.mv(__dirname + '../public/uploads/' + req.body.licenseFrontName);
+        licenseBack.mv(__dirname + '../public/uploads/' + req.body.licenseBackName);
+
+        connection.query("INSERT INTO driver_info(driverID, license_front, license_back, cnic_front, cnic_back) VALUES(?, ?, ?, ?, ?)",
+        [req.body.driverID, req.body.licenseFrontName, req.body.licenseBackName, req.body.cnicFrontName, req.body.cnicBackName],
+        (err, results, fields) => {
+          if(err)
+            throw err;
+          res.send({
             status: true,
             message: 'Files uploaded',
             data: {
-                name: avatar.name,
-                mimetype: avatar.mimetype,
-                size: avatar.size
+              cnicFront: {
+                name: req.body.cnicFrontName,
+                mimetype: cnicFront.mimetype,
+                size: cnicFront.size
+              },
+              cnicBack: {
+                name: req.body.cnicBackName,
+                mimetype: cnicBack.mimetype,
+                size: cnicBack.size
+              },
+              licenseFront: {
+                name: req.body.licenseFrontName,
+                mimetype: licenseFront.mimetype,
+                size: licenseFront.size
+              },
+              licenseBack: {
+                name: req.body.licenseBackName,
+                mimetype: licenseBack.mimetype,
+                size: licenseBack.size
+              }
             }
+          });
         });
+
     }
   } catch (err) {
     res.status(500).send(err);
