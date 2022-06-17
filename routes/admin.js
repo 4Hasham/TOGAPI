@@ -208,4 +208,36 @@ router.get('/getAdmin', (req, res, next) => {
   });
 });
 
+router.get('/getPendingDrivers', (req, res, next) => {
+  connection.query("SELECT drivers.ID, first_name, last_name, gender, dob, phone FROM drivers INNER JOIN users AS t ON drivers.userID = t.ID WHERE drivers.ID IN (SELECT driverID FROM driver_info WHERE status = 0)",
+  (err, results, fields) => {
+    if(err)
+      throw err;
+    res.send(results);
+  });
+});
+
+router.get('/getDriverInfo', (req, res, next) => {
+  connection.query("SELECT * FROM driver_info WHERE driverID = ?",
+  [req.query.id],
+  (err, results, fields) => {
+    if(err)
+      throw err;
+    if(results.length > 0)
+      res.send(results[0]);
+    else
+      res.send({err: 'nothing'});
+  });
+});
+
+router.post('/setDriverStatus', (req, res, next) => {
+  connection.query("UPDATE driver_info SET status = ? WHERE driverID = ?",
+  [req.body.status, req.body.id],
+  (err, results, fields) => {
+    if(err)
+      throw err;
+    res.send(true);
+  });
+});
+
 module.exports = router;

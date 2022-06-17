@@ -1,9 +1,11 @@
 var express = require('express');
+var multer = require('multer');
+const path = require('path')
 var router = express.Router();
-var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 
 var connection = require('./config');
+const { unlink } = require('fs');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -531,62 +533,55 @@ router.get('/getAggregateRatingIntracity', (req, res, next) => {
   });
 });
 
-router.post('/setDriverInfo', (req, res, next) => {
-  console.log(req.files);
-  console.log(req.body);
-  try {
-    if(!req.files) {
-        res.send({
-            status: false,
-            message: 'No file uploaded'
-        });
-    } else {
-        let cnicFront = req.files.cnicFront;        
-        let cnicBack = req.files.cnicBack;        
-        let licenseFront = req.files.licenseFront;        
-        let licenseBack = req.files.licenseBack;        
-        cnicFront.mv(__dirname + '../public/uploads/' + req.body.cnicFrontName);
-        cnicBack.mv(__dirname + '../public/uploads/' + req.body.cnicBackName);
-        licenseFront.mv(__dirname + '../public/uploads/' + req.body.licenseFrontName);
-        licenseBack.mv(__dirname + '../public/uploads/' + req.body.licenseBackName);
+var storage = multer.diskStorage({
+  destination: (req, file, callBack) => {
+      callBack(null, 'public/uploads/')
+  },
+  filename: (req, file, callBack) => {
+      callBack(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+  }
+})
+var upload = multer({
+  storage: storage
+});
 
-        connection.query("INSERT INTO driver_info(driverID, license_front, license_back, cnic_front, cnic_back) VALUES(?, ?, ?, ?, ?)",
-        [req.body.driverID, req.body.licenseFrontName, req.body.licenseBackName, req.body.cnicFrontName, req.body.cnicBackName],
-        (err, results, fields) => {
-          if(err)
-            throw err;
-          res.send({
-            status: true,
-            message: 'Files uploaded',
-            data: {
-              cnicFront: {
-                name: req.body.cnicFrontName,
-                mimetype: cnicFront.mimetype,
-                size: cnicFront.size
-              },
-              cnicBack: {
-                name: req.body.cnicBackName,
-                mimetype: cnicBack.mimetype,
-                size: cnicBack.size
-              },
-              licenseFront: {
-                name: req.body.licenseFrontName,
-                mimetype: licenseFront.mimetype,
-                size: licenseFront.size
-              },
-              licenseBack: {
-                name: req.body.licenseBackName,
-                mimetype: licenseBack.mimetype,
-                size: licenseBack.size
-              }
-            }
-          });
-        });
-
+router.post('/setDriverInfo', upload.fields([
+  {name: 'cnicFront', maxCount: 1}, {name: 'cnicBack', maxCount: 1}, {name: 'licenseFront', maxCount: 1}, {name: 'licenseBack', maxCount: 1}
+]), (req, res, next) => {
+  connection.query("SELECT * FROM driver_info WHERE driverID = ?", [req.body.driverID],
+  (err_, results_, fields_) => {
+    if(err_)
+      throw err_;
+    if(results_.length > 0) {
+      unlink('public/uploads/' + req.files.licenseFront[0].filename, (err) => {
+        if(err)
+          throw err;
+      });
+      unlink('public/uploads/' + req.files.licenseBack[0].filename, (err) => {
+        if(err)
+          throw err;
+      });
+      unlink('public/uploads/' + req.files.cnicFront[0].filename, (err) => {
+        if(err)
+          throw err;
+      });
+      unlink('public/uploads/' + req.files.cnicBack[0].filename, (err) => {
+        if(err)
+          throw err;
+      });
+      res.send({code: 1, msg: 'Already uploaded.'});
     }
-  } catch (err) {
-    res.status(500).send(err);
-  }  
+    else {
+      console.log(req.files);
+      connection.query("INSERT INTO driver_info(driverID, license_front, license_back, cnic_front, cnic_back) VALUES(?, ?, ?, ?, ?)",
+      [req.body.driverID, req.files.licenseFront[0].filename, req.files.licenseBack[0].filename, req.files.cnicFront[0].filename, req.files.cnicBack[0].filename],
+      (err, results, fields) => {
+        if(err)
+          throw err;
+          res.send({code: 0, msg: 'Upload all files.'});
+      });   
+    } 
+  });
 });
 
 module.exports = router;
