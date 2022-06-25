@@ -230,6 +230,34 @@ router.get('/getDriverInfo', (req, res, next) => {
   });
 });
 
+router.get('/getDriverInfoA', (req, res, next) => {
+  var ret = {
+    diID: 0,
+    driverID: 0,
+    license_front: '',
+    license_back: '',
+    cnic_front: '',
+    cnic_back: '',
+    status: 0
+  }
+  connection.query("SELECT * FROM driver_info WHERE driverID = ?",
+  [req.query.diid],
+  (err, results, fields) => {
+    if(err)
+      throw err;
+    if(results.length > 0) {
+      ret.diID = results[0].ID;
+      ret.driverID = results[0].driverID;
+      ret.license_front = results[0].license_front;
+      ret.license_back = results[0].license_back;
+      ret.cnic_front = results[0].cnic_front;
+      ret.cnic_back = results[0].cnic_back;
+      ret.status = results[0].status;
+    }
+    res.send(ret);
+  });
+});
+
 router.post('/setDriverStatus', (req, res, next) => {
   connection.query("UPDATE driver_info SET status = ? WHERE driverID = ?",
   [req.body.status, req.body.id],

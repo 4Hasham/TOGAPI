@@ -417,7 +417,7 @@ router.post('/setIntercityBookingStatus', (req, res, next) => {
 router.get('/getIntercityRides', (req, res, next) => {
     console.log(req.query.truckID);
     var ret = [];
-    connection.query("SELECT * FROM bookingdetails WHERE truckID = ? AND intercity = 1 AND rating = 0", [req.query.truckID],
+    connection.query("SELECT * FROM bookingdetails WHERE truckID = ? AND intercity = 1 AND rating <> -10 ORDER BY ID DESC LIMIT 5", [req.query.truckID],
     (err_, results_, fields_) => {
         if(err_)
             throw err_;
@@ -635,7 +635,7 @@ router.get('/getIntercityRidesByBooking', (req, res, next) => {
 
 
 router.get('/proceedIntercityStatus', (req, res, next) => {
-    connection.query("SELECT * FROM intercity WHERE ID = ? AND rating <> -1 AND rating <> 5", [req.query.iID],
+    connection.query("SELECT * FROM intercity WHERE ID = ? AND status <> -1 AND status <> 5", [req.query.iID],
     (err_, results_, fields_) => {
         if(err_)
             throw err_;
@@ -677,6 +677,20 @@ router.get('/getAcceptedIntercityRidesByBooking', (req, res, next) => {
         }
         else {
             res.send(ret);
+        }
+    });
+});
+
+router.get('/getIntercityBookingStatus', (req, res, next) => {
+    connection.query("SELECT * FROM bookingdetails WHERE ID = ?", [req.query.bID],
+    (err_, results_, fields_) => {
+        if(err_)
+            throw err_;
+        if(results_.length > 0) {
+            res.send((results_[0].rating).toString());
+        }
+        else {
+            res.send((0).toString());
         }
     });
 });

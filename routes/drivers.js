@@ -584,4 +584,54 @@ router.post('/setDriverInfo', upload.fields([
   });
 });
 
+router.post('/getUserByTruck', function(req, res, next) {
+  var obj = {
+    drivID: 0,
+    userID: 0,
+    phone: '',
+    pass: '',
+    wallet: 0,
+    uID: 0,
+    gender: '',
+    first_name: '',
+    last_name: '',
+    dob: ''
+  };
+
+  if(req.body.tID > 0) {
+    connection.query("SELECT * FROM trucks WHERE ID = ?", [req.body.tID],
+    (err, results, fields) => {
+      if(err)
+        throw err;
+      if(results.length > 0) {
+        connection.query("SELECT * FROM drivers WHERE ID = ?", [results[0].driverID],
+        (err_, results_, fiedls_) => {
+          if(err_)
+            throw err_;
+          if(results.length > 0) {
+            connection.query("SELECT * FROM users WHERE ID = ?", [results_[0].userID],
+            (err1, results1, fields1) => {
+              if(err1)
+                throw err1;
+              obj.drivID = results[0].driverID;
+              obj.first_name = results1[0].first_name;
+              obj.last_name = results1[0].last_name;
+              obj.gender = results1[0].gender;
+              obj.phone = results_[0].phone;
+              obj.dob = results1[0].dob;
+              obj.uID = results_[0].userID;
+              obj.wallet = results_[0].wallet;
+              obj.userID = results_[0].userID;
+              res.send(obj);  
+            });
+          }
+        });
+      }
+      else {
+        res.send(obj);
+      }
+    });
+  }
+});
+
 module.exports = router;
