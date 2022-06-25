@@ -15,6 +15,7 @@ var bookRouter = require('./routes/book');
 var firebaseRouter = require('./routes/firebase');
 var treeRouter = require('./routes/tree');
 var adminRouter = require('./routes/admin');
+var chatRouter = require('./routes/chat');
 
 var app = express();
 
@@ -40,6 +41,7 @@ app.use('/book', bookRouter);
 app.use('/firebase', firebaseRouter);
 app.use('/tree', treeRouter);
 app.use('/admin', adminRouter);
+app.use('/chat', chatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

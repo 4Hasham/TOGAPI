@@ -16,7 +16,7 @@ cron.schedule('59 23 * * 5', function() {
             throw err;
         if(results.length == 0)
             return;
-        connection.query("UPDATE bookingdetails SET rating = 1 WHERE custID = ?", [results[0].ID],
+        connection.query("UPDATE bookingdetails SET rating = -10 WHERE custID = ?", [results[0].ID],
         (err_, results_, fields_) => {
             if(err_)
                 throw err_;
