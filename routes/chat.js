@@ -38,4 +38,29 @@ router.post('/getMsgs', (req, res, next) => {
     });
 });
 
+router.get('/getMsgsA', (req, res, next) => {
+    var ret = [];
+    connection.query("SELECT * FROM chat WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?) ORDER BY ID ASC",
+    [req.query.id1, req.query.id2, req.query.id2, req.query.id1],
+    (err, results, fields) => {
+        if(err)
+            throw err;
+        if(results.length > 0) {
+            for(let i = 0; i < results.length; ++i) {
+                ret.push({
+                    mID: results[i].ID,
+                    message: results[i].message,
+                    sender: results[i].sender,
+                    receiver: results[i].receiver,
+                    time: results[i].time
+                })
+            }
+            res.send(ret);
+        }
+        else {
+            res.send([]);
+        }
+    });
+});
+
 module.exports = router;
