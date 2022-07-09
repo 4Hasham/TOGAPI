@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "concurrently \"nodemon ./bin/www\" \"node cron\"",
+    "start": "nodemon ./bin/www",
     "server": "concurrently \"nodemon ./bin/www\" \"node cron\"",
     "client": "cd ../client/ && npm run start",
     "postinstall": "cd functions && npm install",
