@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/truck', function(req, res, next) {
-  connection.query("INSERT INTO trucks(`numberplate`, `type`, `driverID`, `capacity`, `length`) VALUES(?, ?, 0, ?, ?)", [req.body.numberPlate, req.body.truckType, req.body.capacity, req.body.length],
+  connection.query("INSERT INTO trucks(`numberplate`, `type`, `driverID`, `capacity`, `length`) VALUES(?, ?, ?, ?, ?)", [req.body.numberPlate, req.body.truckType, req.body.driverID, req.body.capacity, req.body.length],
   (err, results, fields) => {
     if(err)
       throw err;
@@ -103,12 +103,11 @@ router.post('/truckAssign', function(req, res, next) {
     if(err)
     throw err;
     if(results.length > 0) {
-      console.log(results[0].ID);
       connection.query("UPDATE routes SET truckID = ? WHERE ID = ?", [results[0].ID, req.body.routeID],
       (err1, results1, fields1) => {
         if(err1)
           throw err1;
-        res.send(true);
+        res.send({truckID: results[0].ID});
       });
     }
     else {
